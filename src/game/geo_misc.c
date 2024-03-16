@@ -66,11 +66,24 @@ void make_vertex(Vtx *vtx, s32 n, f32 x, f32 y, f32 z, s16 tx, s16 ty, u8 r, u8 
  * Round `num` to the nearest `s16`.
  */
 s16 round_float(f32 num) {
+    union {u32 i; f32 f;}data;
+    data.f=num;
     // Note that double literals are used here, rather than float literals.
-    if (num >= 0.0) {
-        return num + 0.5;
-    } else {
-        return num - 0.5;
+    u32 num_int= data.i;
+
+    s32 mantissa=num_int &  ( (1<<23)-1);
+    mantissa=mantissa |  (1<<23) ;
+
+    s32 exponent = (num_int >>23) & 0xff ;
+    s32 sign=((num_int & (1<<31) )>0 ?-1:1)  ;
+    s32 shift= exponent-150;
+
+    if (shift>=0) {
+        return sign*(mantissa<<shift);
+    } else { 
+	int pos=-(shift+1);
+	int digit= (mantissa & ( 1 << pos )) >> pos;
+	return digit ? sign*((mantissa >> -shift)-1+2*digit) : sign*(mantissa >>-shift);
     }
 }
 
