@@ -28,17 +28,17 @@ NDS_ITCM_CODE f32 __wrap_sqrtf(f32 x){
     REG_SQRT_PARAM = mantissa;
     u32 raw_exponent= (xu.i & (0xff<<23));
     if (raw_exponent > 0 ) {
-    s32 exponent=raw_exponent-(127<<23);
-    exponent=exponent>>1; //right shift on negative number depends on compiler
-    exponent=((exponent+(127<<23))& (0xff<<23) );
+	s32 exponent=raw_exponent-(127<<23);
+	exponent=exponent>>1; //right shift on negative number depends on compiler
+	exponent=((exponent+(127<<23))& (0xff<<23) );
     //fetch async result here
     
-    while(REG_SQRTCNT & SQRT_BUSY);
-    xu.i=  exponent| (REG_SQRT_RESULT & ((1<<23)-1));
-    return xu.f;
+	while(REG_SQRTCNT & SQRT_BUSY);
+	xu.i=  exponent| (REG_SQRT_RESULT & ((1<<23)-1));
+	return xu.f;
     } else{
-    while(REG_SQRTCNT & SQRT_BUSY);
-    return 0.0;
+	while(REG_SQRTCNT & SQRT_BUSY);
+	return 0.0;
     };
 
 }

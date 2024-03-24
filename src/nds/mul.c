@@ -21,16 +21,9 @@
 
 
 NDS_ITCM_CODE f32 __wrap___aeabi_fmul( f32 x, f32 y){
-    union {
-    u32 i;
-    f32 f;
-    }xu;
+    union {u32 i;f32 f;}xu;
     xu.f=x;
-    union {
-    u32 j;
-    f32 f;
-
-    }yu;
+    union {u32 j;f32 f;}yu;
     yu.f=y;
 
     u32 a =xu.i & (1<<31);//get sign of x
