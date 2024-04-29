@@ -16,6 +16,7 @@
 
 
 
+
 NDS_ITCM_CODE f32 __wrap_sqrtf(f32 x){
     union{f32 f; u32 i;}xu;
     xu.f=x;
@@ -23,7 +24,7 @@ NDS_ITCM_CODE f32 __wrap_sqrtf(f32 x){
     //check if exponent is odd
     //before subtracting 127 exponent was even if it is odd now
     //therefore check if last digit is 0 
-    mantissa=(mantissa+(1<<23))<<   ( (( xu.i & (1<<23))==0  )      +23 );
+    mantissa=(mantissa+(1<<23))<<   ( (( xu.i & (1<<23))==0  )      +25 );
     REG_SQRTCNT = SQRT_64;
     REG_SQRT_PARAM = mantissa;
     u32 raw_exponent= (xu.i & (0xff<<23));
@@ -32,9 +33,11 @@ NDS_ITCM_CODE f32 __wrap_sqrtf(f32 x){
 	exponent=exponent>>1; //right shift on negative number depends on compiler
 	exponent=((exponent+(127<<23))& (0xff<<23) );
     //fetch async result here
-    
 	while(REG_SQRTCNT & SQRT_BUSY);
-	xu.i=  exponent| (REG_SQRT_RESULT & ((1<<23)-1));
+	u64 new_mantissa=REG_SQRT_RESULT;
+	new_mantissa+=1;
+	new_mantissa>>=1;
+	xu.i=  exponent| (new_mantissa & ((1<<23)-1));
 	return xu.f;
     } else{
 	while(REG_SQRTCNT & SQRT_BUSY);

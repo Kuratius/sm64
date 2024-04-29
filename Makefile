@@ -408,7 +408,7 @@ endif
 ifeq ($(TARGET_NDS),1)
 
 LIBDIRS := $(DEVKITPRO)/libnds
-TARGET_CFLAGS := -march=armv5te -mtune=arm946e-s $(foreach dir,$(LIBDIRS),-I$(dir)/include) -include floatheader.h -DTARGET_NDS -DARM9 -D_LANGUAGE_C -DNO_SEGMENTED_MEMORY #-DENABLE_FPS
+TARGET_CFLAGS := -march=armv5te -mtune=arm946e-s $(foreach dir,$(LIBDIRS),-I$(dir)/include) -include floatheader.h -DTARGET_NDS -DARM9 -D_LANGUAGE_C -DNO_SEGMENTED_MEMORY -static -DENABLE_FPS 
 ARM7_TARGET_CFLAGS := -mcpu=arm7tdmi -mtune=arm7tdmi $(foreach dir,$(LIBDIRS),-I$(dir)/include) -DTARGET_NDS -DARM7
 
 CC_CHECK := $(CC)
@@ -417,7 +417,7 @@ ARM7_CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(ARM7_TARGET_C
 
 ASFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(foreach d,$(DEFINES),--defsym $(d))
 CFLAGS := -fno-strict-aliasing -fwrapv $(OPT_FLAGS) $(TARGET_CFLAGS) $(DEF_INC_CFLAGS)
-LDFLAGS := -specs=dsi_arm9.specs -g -mthumb -mthumb-interwork  $(TARGET_CFLAGS)  -Wl,--use-blx,--wrap="__aeabi_fmul",--wrap="__aeabi_fdiv",--wrap="sqrtf" -u sqrtf -u __aeabi_fmul -u __aeabi_fdiv $(foreach dir,$(LIBDIRS),-L$(dir)/lib) -lfat -lnds9 -lm
+LDFLAGS := -specs=dsi_arm9.specs -g -mthumb -mthumb-interwork  $(TARGET_CFLAGS)  -Wl,--use-blx,--wrap="sqrtf" -u sqrtf  $(foreach dir,$(LIBDIRS),-L$(dir)/lib) -lfat -lnds9 -lm
 
 ARM7_CFLAGS := -fno-strict-aliasing -fwrapv $(OPT_FLAGS) $(ARM7_TARGET_CFLAGS) $(DEF_INC_CFLAGS)
 ARM7_LDFLAGS := -lnds7 -specs=ds_arm7.specs -g -mthumb-interwork $(foreach dir,$(LIBDIRS),-L$(dir)/lib) $(ARM7_TARGET_CFLAGS)
