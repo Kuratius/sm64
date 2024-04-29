@@ -8,6 +8,5 @@ double sin(double);
 float cosf(float);
 double cos(double);
 
-#define sqrtf fsqrt;
 
 #endif
