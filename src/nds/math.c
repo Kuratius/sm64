@@ -34,7 +34,7 @@ NDS_ITCM_CODE f32 __wrap_sqrtf(f32 x){
 	exponent=((exponent+(127<<23))& (0xff<<23) );
     //fetch async result here
 	while(REG_SQRTCNT & SQRT_BUSY);
-	u64 new_mantissa=REG_SQRT_RESULT;
+	u32 new_mantissa=REG_SQRT_RESULT;
 	new_mantissa+=1;
 	new_mantissa>>=1;
 	xu.i=  exponent| (new_mantissa & ((1<<23)-1));
